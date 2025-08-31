@@ -1,6 +1,10 @@
 # Among Us 3DS
 A recreation of Among Us with new features and completely rewritten for the Nintendo 3DS
 
+
+### No code is here yet.
+At the moment I am only working on things on the client-side
+
 ## THIS PROJECT IS NOT COMPLETE!
 It has many bugs and quirks that need to be worked out, but I am commited to completing this remake.
 
