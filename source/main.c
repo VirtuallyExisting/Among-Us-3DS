@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
 
 	C2D_SpriteFromImage(&sprite, C2D_SpriteSheetGetImage(spriteSheet, 0));
 
-	C2D_SpriteSetPos(&sprite, 110, 120);
+	
 
 
 	// Main loop
@@ -96,6 +96,10 @@ int main(int argc, char* argv[]) {
 
 
 		if (scene == 2) {
+			// Set player sprite pos
+			
+
+
 			// Respond to user input
 			u32 kDown = hidKeysHeld();
 			if (kDown & KEY_START)
@@ -116,6 +120,7 @@ int main(int argc, char* argv[]) {
 			
 			if (playerAnim == 0) {
 				C2D_SpriteFromImage(&sprite, C2D_SpriteSheetGetImage(spriteSheet, 0));
+				C2D_SpriteSetPos(&sprite, 150, 100);
 				playerFrame = 0;
 			}
 			if (playerAnim == 1) {
@@ -127,6 +132,7 @@ int main(int argc, char* argv[]) {
 						animCounter = 0;
 					}
 					C2D_SpriteFromImage(&sprite, C2D_SpriteSheetGetImage(spriteSheet, 1));
+					C2D_SpriteSetPos(&sprite, 150, 100);
 				}
 
 				if (playerFrame == 1) {
@@ -135,6 +141,7 @@ int main(int argc, char* argv[]) {
 						animCounter = 0;
 					}
 					C2D_SpriteFromImage(&sprite, C2D_SpriteSheetGetImage(spriteSheet, 2));
+					C2D_SpriteSetPos(&sprite, 150, 100);
 				}
 				if (playerFrame == 2) {
 					if (animCounter >= ANIM_DELAY_FRAMES) {
@@ -142,6 +149,7 @@ int main(int argc, char* argv[]) {
 						animCounter = 0;
 					}
 					C2D_SpriteFromImage(&sprite, C2D_SpriteSheetGetImage(spriteSheet, 3));
+					C2D_SpriteSetPos(&sprite, 150, 100);
 				}
 			}
 		}
