@@ -14,6 +14,7 @@
 int main(int argc, char* argv[]) {
 //---------------------------------------------------------------------------------
 	// Init libs
+	romfsInit();
 	gfxInitDefault();
 	C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
 	C2D_Init(C2D_DEFAULT_MAX_OBJECTS);
@@ -22,6 +23,10 @@ int main(int argc, char* argv[]) {
 	// Create screens
 	C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
 	C3D_RenderTarget* bottom = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
+
+
+
+	
 
 	int scene;
 	scene = 1;
@@ -45,6 +50,7 @@ int main(int argc, char* argv[]) {
 
 	u32 clrClear = C2D_Color32(0xFF, 0xD8, 0xB0, 0x68);
 
+
 	float playerX;
 	playerX = 0;
 	float playerY;
@@ -54,12 +60,27 @@ int main(int argc, char* argv[]) {
 	float testobjY;
 	testobjY = 0;
 
+	C2D_SpriteSheet spriteSheet;
+	C2D_Sprite sprite;
+
+	spriteSheet = C2D_SpriteSheetLoad("romfs:/gfx/sprites.t3x");
+	if (!spriteSheet) svcBreak(USERBREAK_PANIC);
+
+	C2D_SpriteFromImage(&sprite, C2D_SpriteSheetGetImage(spriteSheet, 0));
+
+	C2D_SpriteSetPos(&sprite, 200, 120);
+
+
 	// Main loop
 	while (aptMainLoop())
 	{
 		hidScanInput();
 		touchPosition touch;
 		hidTouchRead(&touch);
+
+		
+
+
 
 
 
@@ -106,6 +127,7 @@ int main(int argc, char* argv[]) {
 		if (scene == 2){
 			C2D_DrawRectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0, 50, 50, clrRed, clrRed, clrRed, clrRed);
 			C2D_DrawRectangle(testobjX - playerX, testobjY - playerY, 0, 50, 50, clrRed, clrRed, clrRed, clrRed);
+			C2D_DrawSprite(&sprite);
 		}
 
 
@@ -126,6 +148,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	// Deinit libs
+	C2D_SpriteSheetFree(spriteSheet);
 	C2D_Fini();
 	C3D_Fini();
 	gfxExit();

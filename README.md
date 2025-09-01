@@ -2,7 +2,7 @@
 A recreation of Among Us with new features and completely rewritten for the Nintendo 3DS
 
 
-### This is an Early Alpha
+### This is a prototype
 This is not complete in the slightest. Check back later for more updates!
 
 ## THIS PROJECT IS NOT COMPLETE!
