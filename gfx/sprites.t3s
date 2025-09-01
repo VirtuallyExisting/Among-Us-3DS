@@ -1,2 +1,5 @@
 --atlas -f rgba8888 -z auto
 Idle.png
+Walk1.png
+walk2.png
+Walk3.png

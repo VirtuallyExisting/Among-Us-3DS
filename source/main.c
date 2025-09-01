@@ -10,6 +10,8 @@
 #define SCREEN_WIDTH  400
 #define SCREEN_HEIGHT 240
 
+#define ANIM_DELAY_FRAMES 6 // If the game is running at 60 FPS then this is equaL to a 0.1 second delay.
+
 //---------------------------------------------------------------------------------
 int main(int argc, char* argv[]) {
 //---------------------------------------------------------------------------------
@@ -60,6 +62,14 @@ int main(int argc, char* argv[]) {
 	float testobjY;
 	testobjY = 0;
 
+	int playerAnim;
+	playerAnim = 0;
+
+	int playerFrame;
+	playerFrame = 0;
+
+	int animCounter = 0;
+
 	C2D_SpriteSheet spriteSheet;
 	C2D_Sprite sprite;
 
@@ -68,7 +78,7 @@ int main(int argc, char* argv[]) {
 
 	C2D_SpriteFromImage(&sprite, C2D_SpriteSheetGetImage(spriteSheet, 0));
 
-	C2D_SpriteSetPos(&sprite, 200, 120);
+	C2D_SpriteSetPos(&sprite, 110, 120);
 
 
 	// Main loop
@@ -98,6 +108,42 @@ int main(int argc, char* argv[]) {
 				playerY = playerY + 3;
 			if (kDown & KEY_DUP)
 				playerY = playerY - 3;
+			
+			if (!kDown)
+				playerAnim = 0;
+			if (kDown)
+				playerAnim = 1;
+			
+			if (playerAnim == 0) {
+				C2D_SpriteFromImage(&sprite, C2D_SpriteSheetGetImage(spriteSheet, 0));
+				playerFrame = 0;
+			}
+			if (playerAnim == 1) {
+				animCounter++;
+
+				if (playerFrame == 0) {
+					if (animCounter >= ANIM_DELAY_FRAMES) {
+						playerFrame++;
+						animCounter = 0;
+					}
+					C2D_SpriteFromImage(&sprite, C2D_SpriteSheetGetImage(spriteSheet, 1));
+				}
+
+				if (playerFrame == 1) {
+					if (animCounter >= ANIM_DELAY_FRAMES) {
+						playerFrame++;
+						animCounter = 0;
+					}
+					C2D_SpriteFromImage(&sprite, C2D_SpriteSheetGetImage(spriteSheet, 2));
+				}
+				if (playerFrame == 2) {
+					if (animCounter >= ANIM_DELAY_FRAMES) {
+						playerFrame = 0;
+						animCounter = 0;
+					}
+					C2D_SpriteFromImage(&sprite, C2D_SpriteSheetGetImage(spriteSheet, 3));
+				}
+			}
 		}
 
 		if (scene == 1) {
@@ -125,7 +171,6 @@ int main(int argc, char* argv[]) {
 
 
 		if (scene == 2){
-			C2D_DrawRectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0, 50, 50, clrRed, clrRed, clrRed, clrRed);
 			C2D_DrawRectangle(testobjX - playerX, testobjY - playerY, 0, 50, 50, clrRed, clrRed, clrRed, clrRed);
 			C2D_DrawSprite(&sprite);
 		}
