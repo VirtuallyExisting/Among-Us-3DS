@@ -34,10 +34,10 @@ int main(int argc, char* argv[]) {
 	scene = 1;
 
 
-	const int buttonWidth = 50;
+	const int buttonWidth = 150;
 	const int buttonHeight = 50;
-	const int buttonX = SCREEN_WIDTH / 2 - buttonWidth / 2; // Top-left X
-	const int buttonY = SCREEN_HEIGHT / 2 - buttonHeight / 2; // Top-left Y
+	const int buttonX = 100 - buttonWidth / 2; // Top-left X
+	const int buttonY = 100 - buttonHeight / 2; // Top-left Y
 
 	// Create colors
 	u32 clrWhite = C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF);
@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
 	u32 clrRec3 = C2D_Color32(0xD8, 0xF6, 0x0F, 0xFF);
 	u32 clrRec4 = C2D_Color32(0x40, 0xEA, 0x87, 0xFF);
 
-	u32 clrClear = C2D_Color32(0xFF, 0xD8, 0xB0, 0x68);
+	u32 clrClear = C2D_Color32(0x00, 0x00, 0x00, 0x00);
 
 
 	float playerX;
@@ -72,11 +72,14 @@ int main(int argc, char* argv[]) {
 
 	C2D_SpriteSheet spriteSheet;
 	C2D_Sprite sprite;
+	C2D_Sprite freeplaybutton;
 
 	spriteSheet = C2D_SpriteSheetLoad("romfs:/gfx/sprites.t3x");
 	if (!spriteSheet) svcBreak(USERBREAK_PANIC);
 
 	C2D_SpriteFromImage(&sprite, C2D_SpriteSheetGetImage(spriteSheet, 0));
+	C2D_SpriteFromImage(&freeplaybutton, C2D_SpriteSheetGetImage(spriteSheet, 4));
+
 
 	
 
@@ -192,7 +195,8 @@ int main(int argc, char* argv[]) {
 			
 		}
 		if (scene == 1){
-			C2D_DrawRectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0, 50, 50, clrGreen, clrGreen, clrGreen, clrGreen);
+			C2D_DrawSprite(&freeplaybutton);
+			C2D_SpriteSetPos(&freeplaybutton, 70, 100);
 			
 		}
 
