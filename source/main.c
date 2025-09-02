@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
 	scene = 1;
 
 
-	const int freeplayWidth = 150;
+	const int freeplayWidth = 250;
 	const int freeplayHeight = 50;
 	const int freeplayX = 100 - freeplayWidth / 2; // Top-left X
 	const int freeplayY = 100 - freeplayHeight / 2; // Top-left Y
@@ -125,7 +125,11 @@ int main(int argc, char* argv[]) {
 
 
 
-
+			if (dummy1dead == 1) {
+				C2D_SpriteFromImage(&dummy1, C2D_SpriteSheetGetImage(spriteSheet, 6));
+				C2D_SpriteSetPos(&dummy1, dummy1x - playerX, dummy1y - playerY);
+				dummy1dead = 0;
+			}
 
 
 
@@ -226,8 +230,8 @@ int main(int argc, char* argv[]) {
 			// This C2D_DrawRectangle function remains in existence as a comment so that it can be used as future reference for rectangles and offsetting code.
 			//	C2D_DrawRectangle(testobjX - playerX, testobjY - playerY, 0, 50, 50, clrRed, clrRed, clrRed, clrRed);
 			C2D_DrawSprite(&sprite);
-			if (!dummy1dead)
-				C2D_DrawSprite(&dummy1);
+			
+			C2D_DrawSprite(&dummy1);
 			
 		}
 
