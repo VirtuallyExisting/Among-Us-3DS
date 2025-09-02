@@ -62,6 +62,28 @@ int main(int argc, char* argv[]) {
 	playerSpriteX = playerX + 150;
 	float playerSpriteY;
 	playerSpriteY = playerY + 100;
+	
+
+
+	float vent1x;
+	float vent1y;
+	vent1x = -50;
+	vent1y = 0;
+
+	float vent2x;
+	float vent2y;
+	vent2x = 50;
+	vent2y = 0;
+
+	int inVent;
+	inVent = 0;
+	int ventIn;
+	ventIn = 0;
+
+
+
+
+
 
 
 	float testobjX;
@@ -87,6 +109,8 @@ int main(int argc, char* argv[]) {
 	C2D_Sprite sprite;
 	C2D_Sprite freeplaybutton;
 	C2D_Sprite dummy1;
+	C2D_Sprite vent1;
+	C2D_Sprite vent2;
 
 	spriteSheet = C2D_SpriteSheetLoad("romfs:/gfx/sprites.t3x");
 	if (!spriteSheet) svcBreak(USERBREAK_PANIC);
@@ -94,6 +118,8 @@ int main(int argc, char* argv[]) {
 	C2D_SpriteFromImage(&sprite, C2D_SpriteSheetGetImage(spriteSheet, 0));
 	C2D_SpriteFromImage(&freeplaybutton, C2D_SpriteSheetGetImage(spriteSheet, 4));
 	C2D_SpriteFromImage(&dummy1, C2D_SpriteSheetGetImage(spriteSheet, 0));
+	C2D_SpriteFromImage(&vent1, C2D_SpriteSheetGetImage(spriteSheet, 5));
+	C2D_SpriteFromImage(&vent2, C2D_SpriteSheetGetImage(spriteSheet, 5));
 
 	
 
@@ -123,6 +149,11 @@ int main(int argc, char* argv[]) {
 
 
 
+			C2D_SpriteSetPos(&vent1, vent1x - playerX, vent1y - playerY);
+			C2D_SpriteSetPos(&vent2, vent2x - playerX, vent2y - playerY);
+
+
+
 
 
 			if (dummy1dead == 1) {
@@ -143,22 +174,63 @@ int main(int argc, char* argv[]) {
 
 			// Respond to user input
 			u32 kDown = hidKeysHeld();
-			if (kDown & KEY_START)
-				break; // break in order to return to hbmenu
-			if (kDown & KEY_CPAD_RIGHT)
-				playerX = playerX + 3;
-			if (kDown & KEY_CPAD_LEFT)
-				playerX = playerX - 3;
-			if (kDown & KEY_CPAD_DOWN)
-				playerY = playerY + 3;
-			if (kDown & KEY_CPAD_UP)
-				playerY = playerY - 3;
+			u32 kPressed = hidKeysDown();
+			if (!inVent) {
+				if (kDown & KEY_CPAD_RIGHT)
+					playerX = playerX + 3;
+				if (kDown & KEY_CPAD_LEFT)
+					playerX = playerX - 3;
+				if (kDown & KEY_CPAD_DOWN)
+					playerY = playerY + 3;
+				if (kDown & KEY_CPAD_UP)
+					playerY = playerY - 3;
+			}
 			
-			if (kDown & KEY_A) {
-				if (sqrt(pow(playerSpriteX - dummy1x, 2) + pow(playerSpriteY - dummy1y, 2)) <= 100.0f) {
-					dummy1dead = 1;
+			if (kPressed & KEY_A) {
+				if (!inVent) {
+					if (sqrt(pow(playerSpriteX - dummy1x, 2) + pow(playerSpriteY - dummy1y, 2)) <= 100.0f) {
+						dummy1dead = 1;
+					}
+				}
+
+
+				
+			
+
+			}
+			if (kPressed & KEY_B) {
+				if (!inVent) {
+					if (sqrt(pow(playerSpriteX - vent1x, 2) + pow(playerSpriteY - vent1y, 2)) <= 100.0f) {
+						inVent = 1;
+						ventIn = 1;
+					}
+					if (sqrt(pow(playerSpriteX - vent2x, 2) + pow(playerSpriteY - vent2y, 2)) <= 100.0f) {
+						inVent = 1;
+						ventIn = 2;
+					}
+				}
+				else if (inVent) {
+					inVent = 0;
 				}
 			}
+
+
+			if (kPressed & KEY_X) {
+				if (inVent) {
+					if (ventIn == 1) {
+						playerX = vent2x - 150;
+						playerY = vent2y - 85;
+						ventIn = 2;
+					}
+					else if (ventIn == 2) {
+						playerX = vent1x - 150;
+						playerY = vent1y - 85;
+						ventIn = 1;
+					}
+				}
+			}
+			
+
 				
 			
 			if (!kDown)
@@ -229,10 +301,13 @@ int main(int argc, char* argv[]) {
 		if (scene == 2){
 			// This C2D_DrawRectangle function remains in existence as a comment so that it can be used as future reference for rectangles and offsetting code.
 			//	C2D_DrawRectangle(testobjX - playerX, testobjY - playerY, 0, 50, 50, clrRed, clrRed, clrRed, clrRed);
-			C2D_DrawSprite(&sprite);
+			C2D_DrawSprite(&vent1);
+			C2D_DrawSprite(&vent2);
+			if (!inVent)
+				C2D_DrawSprite(&sprite);
 			
 			C2D_DrawSprite(&dummy1);
-			
+		
 		}
 
 
