@@ -34,10 +34,10 @@ int main(int argc, char* argv[]) {
 	scene = 1;
 
 
-	const int buttonWidth = 150;
-	const int buttonHeight = 50;
-	const int buttonX = 100 - buttonWidth / 2; // Top-left X
-	const int buttonY = 100 - buttonHeight / 2; // Top-left Y
+	const int freeplayWidth = 150;
+	const int freeplayHeight = 50;
+	const int freeplayX = 100 - freeplayWidth / 2; // Top-left X
+	const int freeplayY = 100 - freeplayHeight / 2; // Top-left Y
 
 	// Create colors
 	u32 clrWhite = C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF);
@@ -57,10 +57,23 @@ int main(int argc, char* argv[]) {
 	playerX = 0;
 	float playerY;
 	playerY = 0;
+
+	float playerSpriteX;
+	playerSpriteX = playerX + 150;
+	float playerSpriteY;
+	playerSpriteY = playerY + 100;
+
+
 	float testobjX;
 	testobjX = 0;
 	float testobjY;
 	testobjY = 0;
+	float dummy1x;
+	dummy1x = 0;
+	float dummy1y;
+	dummy1y = 0;
+	int dummy1dead;
+	dummy1dead = 0;
 
 	int playerAnim;
 	playerAnim = 0;
@@ -73,13 +86,14 @@ int main(int argc, char* argv[]) {
 	C2D_SpriteSheet spriteSheet;
 	C2D_Sprite sprite;
 	C2D_Sprite freeplaybutton;
+	C2D_Sprite dummy1;
 
 	spriteSheet = C2D_SpriteSheetLoad("romfs:/gfx/sprites.t3x");
 	if (!spriteSheet) svcBreak(USERBREAK_PANIC);
 
 	C2D_SpriteFromImage(&sprite, C2D_SpriteSheetGetImage(spriteSheet, 0));
 	C2D_SpriteFromImage(&freeplaybutton, C2D_SpriteSheetGetImage(spriteSheet, 4));
-
+	C2D_SpriteFromImage(&dummy1, C2D_SpriteSheetGetImage(spriteSheet, 0));
 
 	
 
@@ -99,7 +113,27 @@ int main(int argc, char* argv[]) {
 
 
 		if (scene == 2) {
-			// Set player sprite pos
+			// Set dummy sprite pos
+			C2D_SpriteSetPos(&dummy1, 0 - playerX, 0 - playerY); // subtract x and y positions by player positions in order to cause proper camera offset.
+
+
+			playerSpriteX = playerX + 150;
+
+			playerSpriteY = playerY + 100;
+
+
+
+
+
+
+
+
+
+
+
+
+
+			// Below is mostly annoyingly complicated, the room above is for simpler functions.
 			
 
 
@@ -107,18 +141,25 @@ int main(int argc, char* argv[]) {
 			u32 kDown = hidKeysHeld();
 			if (kDown & KEY_START)
 				break; // break in order to return to hbmenu
-			if (kDown & KEY_DRIGHT)
+			if (kDown & KEY_CPAD_RIGHT)
 				playerX = playerX + 3;
-			if (kDown & KEY_DLEFT)
+			if (kDown & KEY_CPAD_LEFT)
 				playerX = playerX - 3;
-			if (kDown & KEY_DDOWN)
+			if (kDown & KEY_CPAD_DOWN)
 				playerY = playerY + 3;
-			if (kDown & KEY_DUP)
+			if (kDown & KEY_CPAD_UP)
 				playerY = playerY - 3;
+			
+			if (kDown & KEY_A) {
+				if (sqrt(pow(playerSpriteX - dummy1x, 2) + pow(playerSpriteY - dummy1y, 2)) <= 100.0f) {
+					dummy1dead = 1;
+				}
+			}
+				
 			
 			if (!kDown)
 				playerAnim = 0;
-			if (kDown)
+			if (kDown & (KEY_CPAD_UP | KEY_CPAD_DOWN | KEY_CPAD_LEFT | KEY_CPAD_RIGHT))
 				playerAnim = 1;
 			
 			if (playerAnim == 0) {
@@ -160,8 +201,8 @@ int main(int argc, char* argv[]) {
 		if (scene == 1) {
 			    // Check if the screen is being touched AND the touch is inside the button
 			if (hidKeysHeld() & KEY_TOUCH &&
-				touch.px >= buttonX && touch.px < (buttonX + buttonWidth) &&
-				touch.py >= buttonY && touch.py < (buttonY + buttonHeight))
+				touch.px >= freeplayX && touch.px < (freeplayX + freeplayWidth) &&
+				touch.py >= freeplayY && touch.py < (freeplayY + freeplayHeight))
 			{
 				scene = 2;
 				clrGreen = clrBlue;
@@ -182,8 +223,12 @@ int main(int argc, char* argv[]) {
 
 
 		if (scene == 2){
-			C2D_DrawRectangle(testobjX - playerX, testobjY - playerY, 0, 50, 50, clrRed, clrRed, clrRed, clrRed);
+			// This C2D_DrawRectangle function remains in existence as a comment so that it can be used as future reference for rectangles and offsetting code.
+			//	C2D_DrawRectangle(testobjX - playerX, testobjY - playerY, 0, 50, 50, clrRed, clrRed, clrRed, clrRed);
 			C2D_DrawSprite(&sprite);
+			if (!dummy1dead)
+				C2D_DrawSprite(&dummy1);
+			
 		}
 
 
