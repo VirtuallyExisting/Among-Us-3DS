@@ -1,0 +1,6 @@
+*.c    linguist-language=C
+*.h    linguist-language=C
+
+Makefile           linguist-vendored
+*.mk               linguist-vendored
+config.status      linguist-generated
