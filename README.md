@@ -1,4 +1,4 @@
-# Among Us 3DS
+# Among Us Cross (Cross Platform)
 A recreation of Among Us with new features and completely rewritten for the Nintendo 3DS
 
 
