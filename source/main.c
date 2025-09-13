@@ -12,7 +12,7 @@
 #define SCREEN_WIDTH  400
 #define SCREEN_HEIGHT 240
 
-#define ANIM_DELAY_FRAMES 6 // If the game is running at 60 FPS then this is equaL to a 0.1 second delay.
+#define ANIM_DELAY_FRAMES 6 // If the game is running at 60 FPS then this is equal to a 0.1 second delay.
 
 //---------------------------------------------------------------------------------
 int main(int argc, char* argv[]) {
@@ -108,6 +108,7 @@ int main(int argc, char* argv[]) {
 	C2D_Sprite vent2;
 
 	C2D_Image playersprite; // Swap the contents of this variable to different images to change player sprite (this system may need work)
+	C2D_Image dummy1spr;
 
 	spriteSheet = C2D_SpriteSheetLoad("romfs:/gfx/sprites.t3x");
 	if (!spriteSheet) svcBreak(USERBREAK_PANIC);
@@ -118,6 +119,9 @@ int main(int argc, char* argv[]) {
 //	C2D_SpriteFromImage(&dummy1, C2D_SpriteSheetGetImage(spriteSheet, 0));
 //	C2D_SpriteFromImage(&vent1, C2D_SpriteSheetGetImage(spriteSheet, 5));
 //	C2D_SpriteFromImage(&vent2, C2D_SpriteSheetGetImage(spriteSheet, 5));
+
+	C3D_RenderTarget* bottom = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
+	C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
 
 	
 
@@ -233,7 +237,7 @@ int main(int argc, char* argv[]) {
 				playerAnim = 1;
 			
 			if (playerAnim == 0) {
-				playersprite = C2D_SpriteSheetGetImage(spriteSheet, 3);
+				playersprite = C2D_SpriteSheetGetImage(spriteSheet, 0);
 			//	C2D_SpriteSetPos(&sprite, 150, 100);
 				playerFrame = 0;
 			}
@@ -254,7 +258,7 @@ int main(int argc, char* argv[]) {
 						playerFrame++;
 						animCounter = 0;
 					}
-					playersprite = C2D_SpriteSheetGetImage(spriteSheet, 3);
+					playersprite = C2D_SpriteSheetGetImage(spriteSheet, 2);
 				//	C2D_SpriteSetPos(&sprite, 150, 100);
 				}
 				if (playerFrame == 2) {
@@ -288,34 +292,36 @@ int main(int argc, char* argv[]) {
 
 		// Begin rendering on top screen
 		vcplib_FrameBegin();
-		vcplib_BeginTopScreen();
+		C2D_TargetClear(top, clrClear);
+		C2D_SceneBegin(top);
 
 
 		if (scene == 2){
 			// This C2D_DrawRectangle function remains in existence as a comment so that it can be used as future reference for rectangles and offsetting code.
 			//	C2D_DrawRectangle(testobjX - playerX, testobjY - playerY, 0, 50, 50, clrRed, clrRed, clrRed, clrRed);
-			vcplib_DrawImage(C2D_SpriteSheetGetImage(spriteSheet, 5), vent1x - playerX, vent1y - playerY, 1)
-			vcplib_DrawImage(C2D_SpriteSheetGetImage(spriteSheet, 5), vent2x - playerX, vent2y - playerY, 1)
+			vcplib_DrawImage(C2D_SpriteSheetGetImage(spriteSheet, 5), vent1x - playerX, vent1y - playerY, 1);
+			vcplib_DrawImage(C2D_SpriteSheetGetImage(spriteSheet, 5), vent2x - playerX, vent2y - playerY, 1);
 			if (!inVent)
-				vcplib_DrawImage(playersprite, 150, 100, 1)
+				vcplib_DrawImage(playersprite, 150, 100, 1);
 			
-			vcplib_DrawImage(dummy1spr, dummy1x - playerX, dummy1y - playerY)
+			vcplib_DrawImage(dummy1spr, dummy1x - playerX, dummy1y - playerY, 1);
 		
 		}
 
 
 		// Begin rendering on bottom screen
-		vcplib_BeginBottomScreen();
+    	C2D_TargetClear(bottom, clrClear);
+		C2D_SceneBegin(bottom);
 
 		if (scene == 2){
 			
 		}
 		if (scene == 1){
-			vcplib_DrawImage(C2D_SpriteSheetGetImage(spriteSheet, 5), 70, 100, 1)
+			vcplib_DrawImage(C2D_SpriteSheetGetImage(spriteSheet, 4), 70, 100, 1);
 			
 		}
 
-		vcplib_FrameEnd();
+		C3D_FrameEnd(0);
 		
 	}
 
