@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <vcplib.h>
+
 
 #define SCREEN_WIDTH  400
 #define SCREEN_HEIGHT 240
@@ -17,14 +19,7 @@ int main(int argc, char* argv[]) {
 //---------------------------------------------------------------------------------
 	// Init libs
 	romfsInit();
-	gfxInitDefault();
-	C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
-	C2D_Init(C2D_DEFAULT_MAX_OBJECTS);
-	C2D_Prepare();
-
-	// Create screens
-	C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
-	C3D_RenderTarget* bottom = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
+	vcplib_Init();
 
 
 
@@ -112,14 +107,17 @@ int main(int argc, char* argv[]) {
 	C2D_Sprite vent1;
 	C2D_Sprite vent2;
 
+	C2D_Image playersprite; // Swap the contents of this variable to different images to change player sprite (this system may need work)
+
 	spriteSheet = C2D_SpriteSheetLoad("romfs:/gfx/sprites.t3x");
 	if (!spriteSheet) svcBreak(USERBREAK_PANIC);
 
-	C2D_SpriteFromImage(&sprite, C2D_SpriteSheetGetImage(spriteSheet, 0));
-	C2D_SpriteFromImage(&freeplaybutton, C2D_SpriteSheetGetImage(spriteSheet, 4));
-	C2D_SpriteFromImage(&dummy1, C2D_SpriteSheetGetImage(spriteSheet, 0));
-	C2D_SpriteFromImage(&vent1, C2D_SpriteSheetGetImage(spriteSheet, 5));
-	C2D_SpriteFromImage(&vent2, C2D_SpriteSheetGetImage(spriteSheet, 5));
+	playersprite = C2D_SpriteSheetGetImage(spriteSheet, 0);
+	dummy1spr = C2D_SpriteSheetGetImage(spriteSheet, 0);
+//	C2D_SpriteFromImage(&freeplaybutton, C2D_SpriteSheetGetImage(spriteSheet, 4)); // spritesheet image position references (to be removed)
+//	C2D_SpriteFromImage(&dummy1, C2D_SpriteSheetGetImage(spriteSheet, 0));
+//	C2D_SpriteFromImage(&vent1, C2D_SpriteSheetGetImage(spriteSheet, 5));
+//	C2D_SpriteFromImage(&vent2, C2D_SpriteSheetGetImage(spriteSheet, 5));
 
 	
 
@@ -139,8 +137,6 @@ int main(int argc, char* argv[]) {
 
 
 		if (scene == 2) {
-			// Set dummy sprite pos
-			C2D_SpriteSetPos(&dummy1, 0 - playerX, 0 - playerY); // subtract x and y positions by player positions in order to cause proper camera offset.
 
 
 			playerSpriteX = playerX + 150;
@@ -149,16 +145,14 @@ int main(int argc, char* argv[]) {
 
 
 
-			C2D_SpriteSetPos(&vent1, vent1x - playerX, vent1y - playerY);
-			C2D_SpriteSetPos(&vent2, vent2x - playerX, vent2y - playerY);
+
 
 
 
 
 
 			if (dummy1dead == 1) {
-				C2D_SpriteFromImage(&dummy1, C2D_SpriteSheetGetImage(spriteSheet, 6));
-				C2D_SpriteSetPos(&dummy1, dummy1x - playerX, dummy1y - playerY);
+				dummy1spr = C2D_SpriteSheetGetImage(spriteSheet, 6);
 				dummy1dead = 0;
 			}
 
@@ -168,7 +162,7 @@ int main(int argc, char* argv[]) {
 
 
 
-			// Below is mostly annoyingly complicated, the room above is for simpler functions.
+			// Most new logic should go above
 			
 
 
@@ -239,8 +233,8 @@ int main(int argc, char* argv[]) {
 				playerAnim = 1;
 			
 			if (playerAnim == 0) {
-				C2D_SpriteFromImage(&sprite, C2D_SpriteSheetGetImage(spriteSheet, 0));
-				C2D_SpriteSetPos(&sprite, 150, 100);
+				playersprite = C2D_SpriteSheetGetImage(spriteSheet, 3);
+			//	C2D_SpriteSetPos(&sprite, 150, 100);
 				playerFrame = 0;
 			}
 			if (playerAnim == 1) {
@@ -251,8 +245,8 @@ int main(int argc, char* argv[]) {
 						playerFrame++;
 						animCounter = 0;
 					}
-					C2D_SpriteFromImage(&sprite, C2D_SpriteSheetGetImage(spriteSheet, 1));
-					C2D_SpriteSetPos(&sprite, 150, 100);
+					playersprite = C2D_SpriteSheetGetImage(spriteSheet, 1);
+				//	C2D_SpriteSetPos(&sprite, 150, 100);
 				}
 
 				if (playerFrame == 1) {
@@ -260,16 +254,16 @@ int main(int argc, char* argv[]) {
 						playerFrame++;
 						animCounter = 0;
 					}
-					C2D_SpriteFromImage(&sprite, C2D_SpriteSheetGetImage(spriteSheet, 2));
-					C2D_SpriteSetPos(&sprite, 150, 100);
+					playersprite = C2D_SpriteSheetGetImage(spriteSheet, 3);
+				//	C2D_SpriteSetPos(&sprite, 150, 100);
 				}
 				if (playerFrame == 2) {
 					if (animCounter >= ANIM_DELAY_FRAMES) {
 						playerFrame = 0;
 						animCounter = 0;
 					}
-					C2D_SpriteFromImage(&sprite, C2D_SpriteSheetGetImage(spriteSheet, 3));
-					C2D_SpriteSetPos(&sprite, 150, 100);
+					playersprite = C2D_SpriteSheetGetImage(spriteSheet, 3);
+				//	C2D_SpriteSetPos(&sprite, 150, 100);
 				}
 			}
 		}
@@ -293,45 +287,40 @@ int main(int argc, char* argv[]) {
 
 
 		// Begin rendering on top screen
-		C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-		C2D_TargetClear(top, clrClear);
-		C2D_SceneBegin(top);
+		vcplib_FrameBegin();
+		vcplib_BeginTopScreen();
 
 
 		if (scene == 2){
 			// This C2D_DrawRectangle function remains in existence as a comment so that it can be used as future reference for rectangles and offsetting code.
 			//	C2D_DrawRectangle(testobjX - playerX, testobjY - playerY, 0, 50, 50, clrRed, clrRed, clrRed, clrRed);
-			C2D_DrawSprite(&vent1);
-			C2D_DrawSprite(&vent2);
+			vcplib_DrawImage(C2D_SpriteSheetGetImage(spriteSheet, 5), vent1x - playerX, vent1y - playerY, 1)
+			vcplib_DrawImage(C2D_SpriteSheetGetImage(spriteSheet, 5), vent2x - playerX, vent2y - playerY, 1)
 			if (!inVent)
-				C2D_DrawSprite(&sprite);
+				vcplib_DrawImage(playersprite, 150, 100, 1)
 			
-			C2D_DrawSprite(&dummy1);
+			vcplib_DrawImage(dummy1spr, dummy1x - playerX, dummy1y - playerY)
 		
 		}
 
 
 		// Begin rendering on bottom screen
-		C2D_TargetClear(bottom, clrClear);
-		C2D_SceneBegin(bottom);
+		vcplib_BeginBottomScreen();
 
 		if (scene == 2){
 			
 		}
 		if (scene == 1){
-			C2D_DrawSprite(&freeplaybutton);
-			C2D_SpriteSetPos(&freeplaybutton, 70, 100);
+			vcplib_DrawImage(C2D_SpriteSheetGetImage(spriteSheet, 5), 70, 100, 1)
 			
 		}
 
-		C3D_FrameEnd(0);
+		vcplib_FrameEnd();
 		
 	}
 
 	// Deinit libs
 	C2D_SpriteSheetFree(spriteSheet);
-	C2D_Fini();
-	C3D_Fini();
-	gfxExit();
+	vcplib_Deinit();
 	return 0;
 }
