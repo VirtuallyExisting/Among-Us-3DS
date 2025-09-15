@@ -1,19 +1,35 @@
 # Among Us Cross (Cross Platform)
 A recreation of Among Us with new features and completely rewritten for the Nintendo 3DS (Wii and DS support coming soon)
 
+## This branch is marked as _not currently functional_. So do not expect builds that do _anything_
+But on that note, this branch will be completed in a mild period of time, so don't worry!
 
-### This is a prototype
-This is not complete in the slightest. Check back later for more updates!
+# How to compile Among Us Cross (ALL platforms)
 
-## THIS PROJECT IS NOT COMPLETE!
-It has many bugs and quirks that need to be worked out, but I am commited to completing this remake.
+There is a list of things you'll have to do to compile AU3DS/AUCross:
 
+1. Install the right dependencies:
+   devkitPro (with proper tools selected for which version you're compiling)
+   
+   vcplib (Look at my account or just search it up here on github)
+   
+   (Wii) GRRLIB
+   
+   No additional tools are required besides the ones that come with devkitPro after you install vcplib (install GRRLIB if on Wii)
+   
+3. Download the source code for the version you want to compile
+4. Go to that folder and open a terminal there, type in "make" then hit enter, it should compile.
+5. Grab the file you got:
 
-# Why did you make this?
-Among Us is a very unique game, making use of multiplayer in very interesting ways, but, one day, I thought, I'm a crappy programmer and I haven't programmed in C in my entire life, why not make a remake of Among Us for my faithful 3DS in one of the hardest programming languages?
+   (Wii) .dol
+   
+   (3DS) .3dsx
+   
+   (DS) .nds
+   
+7. Put that file onto your console (there are various ways across consoles, I'm not gonna get into that though.)
 
-# How did you make this?
-I copied a lot of code from examples mainly, but I will use the UDS functions from devkitPro for local multiplayer (which I find REALLY cool.) And I also used citro2d to render things on screen, and for other things, it was just trial and error with variables and math functions, otherwise known as torment.
+You have officially compiled Among Us Cross!
 
-# How can I help this project?
-I don't take donations, but I would like it if you contributed useful information in the issues tab, I would like help or at least documentation with local multiplayer, and you can feel free to create a pull request if you'd like to contribute a feature to this remake.
+# Can I use your code, or at least, base my code off of yours?
+Yes. I am a pretty bad programmer, but if you want to use my code, you are welcome, I do not own the Among Us franchise, nor do I claim the rights to the audio, graphics, or mechanics.
