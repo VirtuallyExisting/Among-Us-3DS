@@ -9,13 +9,13 @@
 #include <wiiuse/wpad.h>
 #include <vcplib.h>
 
-#include <freeplaybutton_jpg.h>
-#include <Idle_jpg.h>
-#include <Walk1_jpg.h>
-#include <walk2_jpg.h>
-#include <Walk3_jpg.h>
-#include <deadbody_jpg.h>
-#include <ventclosed_jpg.h>
+#include <freeplaybutton_bmp.h>
+#include <Idle_bmp.h>
+#include <Walk1_bmp.h>
+#include <walk2_bmp.h>
+#include <Walk3_bmp.h>
+#include <deadbody_bmp.h>
+#include <ventclosed_bmp.h>
 
 
 #define SCREEN_WIDTH  400
@@ -122,13 +122,13 @@ int main(int argc, char **argv) {
 //	spriteSheet = C2D_SpriteSheetLoad("romfs:/gfx/sprites.t3x");
 //	if (!spriteSheet) svcBreak(USERBREAK_PANIC);
 
-	GRRLIB_texImg *freeplaybutton = GRRLIB_LoadTexture(freeplaybutton_jpg);
-	GRRLIB_texImg *redcrewidle = GRRLIB_LoadTexture(Idle_jpg);
-	GRRLIB_texImg *redcrewwalk1 = GRRLIB_LoadTexture(Walk1_jpg);
-	GRRLIB_texImg *redcrewwalk2 = GRRLIB_LoadTexture(walk2_jpg);
-	GRRLIB_texImg *redcrewwalk3 = GRRLIB_LoadTexture(Walk3_jpg);
-	GRRLIB_texImg *redcrewdead = GRRLIB_LoadTexture(deadbody_jpg);
-	GRRLIB_texImg *ventclosed = GRRLIB_LoadTexture(ventclosed_jpg);
+	GRRLIB_texImg *freeplaybutton = GRRLIB_LoadTexture(freeplaybutton_bmp);
+	GRRLIB_texImg *redcrewidle = GRRLIB_LoadTexture(Idle_bmp);
+	GRRLIB_texImg *redcrewwalk1 = GRRLIB_LoadTexture(Walk1_bmp);
+	GRRLIB_texImg *redcrewwalk2 = GRRLIB_LoadTexture(walk2_bmp);
+	GRRLIB_texImg *redcrewwalk3 = GRRLIB_LoadTexture(Walk3_bmp);
+	GRRLIB_texImg *redcrewdead = GRRLIB_LoadTexture(deadbody_bmp);
+	GRRLIB_texImg *ventclosed = GRRLIB_LoadTexture(ventclosed_bmp);
 
 	GRRLIB_texImg *playersprite = redcrewidle;
 	GRRLIB_texImg *dummy1spr = redcrewidle;
