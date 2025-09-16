@@ -3,16 +3,19 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
+
+#include <wiiuse/wpad.h>
 #include <vcplib.h>
 
-#include <freeplaybutton_png.h>
-#include <Idle_png.h>
-#include <Walk1_png.h>
-#include <walk2_png.h>
-#include <Walk3_png.h>
-#include <deadbody_png.h>
-#include <ventclosed_png.h>
+#include <freeplaybutton_jpg.h>
+#include <Idle_jpg.h>
+#include <Walk1_jpg.h>
+#include <walk2_jpg.h>
+#include <Walk3_jpg.h>
+#include <deadbody_jpg.h>
+#include <ventclosed_jpg.h>
 
 
 #define SCREEN_WIDTH  400
@@ -24,7 +27,7 @@
 int main(int argc, char **argv) {
 //---------------------------------------------------------------------------------
 	// Init libs
-	romfsInit();
+//	romfsInit();
 	vcplib_Init();
 
 
@@ -41,17 +44,17 @@ int main(int argc, char **argv) {
 	const int freeplayY = 100 - freeplayHeight / 2; // Top-left Y
 
 	// Create colors
-	u32 clrWhite = C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF);
-	u32 clrGreen = C2D_Color32(0x00, 0xFF, 0x00, 0xFF);
-	u32 clrRed   = C2D_Color32(0xFF, 0x00, 0x00, 0xFF);
-	u32 clrBlue  = C2D_Color32(0x00, 0x00, 0xFF, 0xFF);
+//	u32 clrWhite = C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF);
+//	u32 clrGreen = C2D_Color32(0x00, 0xFF, 0x00, 0xFF);
+//	u32 clrRed   = C2D_Color32(0xFF, 0x00, 0x00, 0xFF);
+//	u32 clrBlue  = C2D_Color32(0x00, 0x00, 0xFF, 0xFF);
 
-	u32 clrRec1 = C2D_Color32(0x9A, 0x6C, 0xB9, 0xFF);
-	u32 clrRec2 = C2D_Color32(0xFF, 0xFF, 0x2C, 0xFF);
-	u32 clrRec3 = C2D_Color32(0xD8, 0xF6, 0x0F, 0xFF);
-	u32 clrRec4 = C2D_Color32(0x40, 0xEA, 0x87, 0xFF);
+//	u32 clrRec1 = C2D_Color32(0x9A, 0x6C, 0xB9, 0xFF);
+//	u32 clrRec2 = C2D_Color32(0xFF, 0xFF, 0x2C, 0xFF);
+//	u32 clrRec3 = C2D_Color32(0xD8, 0xF6, 0x0F, 0xFF);
+//	u32 clrRec4 = C2D_Color32(0x40, 0xEA, 0x87, 0xFF);
 
-	u32 clrClear = C2D_Color32(0x00, 0x00, 0x00, 0x00);
+//	u32 clrClear = C2D_Color32(0x00, 0x00, 0x00, 0x00);
 
 
 	float playerX;
@@ -106,42 +109,59 @@ int main(int argc, char **argv) {
 
 	int animCounter = 0;
 
-	C2D_SpriteSheet spriteSheet;
-	C2D_Sprite sprite;
-	C2D_Sprite freeplaybutton;
-	C2D_Sprite dummy1;
-	C2D_Sprite vent1;
-	C2D_Sprite vent2;
+//	C2D_SpriteSheet spriteSheet;
+//	C2D_Sprite sprite;
+//	C2D_Sprite freeplaybutton;
+//	C2D_Sprite dummy1;
+//	C2D_Sprite vent1;
+//	C2D_Sprite vent2;
 
-	C2D_Image playersprite; // Swap the contents of this variable to different images to change player sprite (this system may need work)
-	C2D_Image dummy1spr;
+//	C2D_Image playersprite; // Swap the contents of this variable to different images to change player sprite (this system may need work)
+//	C2D_Image dummy1spr;
 
-	spriteSheet = C2D_SpriteSheetLoad("romfs:/gfx/sprites.t3x");
-	if (!spriteSheet) svcBreak(USERBREAK_PANIC);
+//	spriteSheet = C2D_SpriteSheetLoad("romfs:/gfx/sprites.t3x");
+//	if (!spriteSheet) svcBreak(USERBREAK_PANIC);
 
-	GRRLIB_texImg *freeplaybutton = GRRLIB_LoadTexture(freeplaybutton_png);
+	GRRLIB_texImg *freeplaybutton = GRRLIB_LoadTexture(freeplaybutton_jpg);
+	GRRLIB_texImg *redcrewidle = GRRLIB_LoadTexture(Idle_jpg);
+	GRRLIB_texImg *redcrewwalk1 = GRRLIB_LoadTexture(Walk1_jpg);
+	GRRLIB_texImg *redcrewwalk2 = GRRLIB_LoadTexture(walk2_jpg);
+	GRRLIB_texImg *redcrewwalk3 = GRRLIB_LoadTexture(Walk3_jpg);
+	GRRLIB_texImg *redcrewdead = GRRLIB_LoadTexture(deadbody_jpg);
+	GRRLIB_texImg *ventclosed = GRRLIB_LoadTexture(ventclosed_jpg);
+
+	GRRLIB_texImg *playersprite = redcrewidle;
+	GRRLIB_texImg *dummy1spr = redcrewidle;
 
 
 
-	playersprite = C2D_SpriteSheetGetImage(spriteSheet, 0);
-	dummy1spr = C2D_SpriteSheetGetImage(spriteSheet, 0);
+//	playersprite = C2D_SpriteSheetGetImage(spriteSheet, 0);
+//	dummy1spr = C2D_SpriteSheetGetImage(spriteSheet, 0);
+	dummy1spr = redcrewidle;
+
+
 //	C2D_SpriteFromImage(&freeplaybutton, C2D_SpriteSheetGetImage(spriteSheet, 4)); // spritesheet image position references (to be removed)
 //	C2D_SpriteFromImage(&dummy1, C2D_SpriteSheetGetImage(spriteSheet, 0));
 //	C2D_SpriteFromImage(&vent1, C2D_SpriteSheetGetImage(spriteSheet, 5));
 //	C2D_SpriteFromImage(&vent2, C2D_SpriteSheetGetImage(spriteSheet, 5));
 
-	C3D_RenderTarget* bottom = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
-	C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
+//	C3D_RenderTarget* bottom = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
+//	C3D_RenderTarget* top = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
 
-	
+	WPAD_Init();
 
 
 	// Main loop
-	while (aptMainLoop())
+	while (1)
 	{
-		hidScanInput();
-		touchPosition touch;
-		hidTouchRead(&touch);
+	//	hidScanInput();
+	//	touchPosition touch;
+	//	hidTouchRead(&touch);
+
+	WPAD_ScanPads();
+
+
+	if (WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME)  break;
 
 		
 
@@ -166,7 +186,7 @@ int main(int argc, char **argv) {
 
 
 			if (dummy1dead == 1) {
-				dummy1spr = C2D_SpriteSheetGetImage(spriteSheet, 6);
+				dummy1spr = redcrewdead;
 				dummy1dead = 0;
 			}
 
@@ -181,20 +201,20 @@ int main(int argc, char **argv) {
 
 
 			// Respond to user input
-			u32 kDown = hidKeysHeld();
-			u32 kPressed = hidKeysDown();
+			u32 kDown = WPAD_ButtonsHeld(0);
+			u32 kPressed = WPAD_ButtonsDown(0);
 			if (!inVent) {
-				if (kDown & KEY_CPAD_RIGHT)
+				if (kDown & WPAD_BUTTON_RIGHT)
 					playerX = playerX + 3;
-				if (kDown & KEY_CPAD_LEFT)
+				if (kDown & WPAD_BUTTON_LEFT)
 					playerX = playerX - 3;
-				if (kDown & KEY_CPAD_DOWN)
+				if (kDown & WPAD_BUTTON_DOWN)
 					playerY = playerY + 3;
-				if (kDown & KEY_CPAD_UP)
+				if (kDown & WPAD_BUTTON_UP)
 					playerY = playerY - 3;
 			}
 			
-			if (kPressed & KEY_A) {
+			if (kPressed & WPAD_BUTTON_B) {
 				if (!inVent) {
 					if (sqrt(pow(playerSpriteX - dummy1x, 2) + pow(playerSpriteY - dummy1y, 2)) <= 100.0f) {
 						dummy1dead = 1;
@@ -206,7 +226,7 @@ int main(int argc, char **argv) {
 			
 
 			}
-			if (kPressed & KEY_B) {
+			if (kPressed & WPAD_BUTTON_A) {
 				if (!inVent) {
 					if (sqrt(pow(playerSpriteX - vent1x, 2) + pow(playerSpriteY - vent1y, 2)) <= 100.0f) {
 						inVent = 1;
@@ -223,7 +243,7 @@ int main(int argc, char **argv) {
 			}
 
 
-			if (kPressed & KEY_X) {
+			if (kPressed & WPAD_BUTTON_2) {
 				if (inVent) {
 					if (ventIn == 1) {
 						playerX = vent2x - 150;
@@ -243,11 +263,11 @@ int main(int argc, char **argv) {
 			
 			if (!kDown)
 				playerAnim = 0;
-			if (kDown & (KEY_CPAD_UP | KEY_CPAD_DOWN | KEY_CPAD_LEFT | KEY_CPAD_RIGHT))
+			if (kDown & (WPAD_BUTTON_UP | WPAD_BUTTON_DOWN | WPAD_BUTTON_LEFT | WPAD_BUTTON_RIGHT))
 				playerAnim = 1;
 			
 			if (playerAnim == 0) {
-				playersprite = C2D_SpriteSheetGetImage(spriteSheet, 0);
+				playersprite = redcrewidle;
 			//	C2D_SpriteSetPos(&sprite, 150, 100);
 				playerFrame = 0;
 			}
@@ -259,7 +279,7 @@ int main(int argc, char **argv) {
 						playerFrame++;
 						animCounter = 0;
 					}
-					playersprite = C2D_SpriteSheetGetImage(spriteSheet, 1);
+					playersprite = redcrewwalk1;
 				//	C2D_SpriteSetPos(&sprite, 150, 100);
 				}
 
@@ -268,7 +288,7 @@ int main(int argc, char **argv) {
 						playerFrame++;
 						animCounter = 0;
 					}
-					playersprite = C2D_SpriteSheetGetImage(spriteSheet, 2);
+					playersprite = redcrewwalk2;
 				//	C2D_SpriteSetPos(&sprite, 150, 100);
 				}
 				if (playerFrame == 2) {
@@ -276,7 +296,7 @@ int main(int argc, char **argv) {
 						playerFrame = 0;
 						animCounter = 0;
 					}
-					playersprite = C2D_SpriteSheetGetImage(spriteSheet, 3);
+					playersprite = redcrewwalk3;
 				//	C2D_SpriteSetPos(&sprite, 150, 100);
 				}
 			}
@@ -284,14 +304,11 @@ int main(int argc, char **argv) {
 
 		if (scene == 1) {
 			    // Check if the screen is being touched AND the touch is inside the button
-			if (hidKeysHeld() & KEY_TOUCH &&
-				touch.px >= freeplayX && touch.px < (freeplayX + freeplayWidth) &&
-				touch.py >= freeplayY && touch.py < (freeplayY + freeplayHeight))
-			{
+		//	if (kDown() & KEY_A &&
+		//		touch.px >= freeplayX && touch.px < (freeplayX + freeplayWidth) &&
+		//		touch.py >= freeplayY && touch.py < (freeplayY + freeplayHeight))
+			if (WPAD_ButtonsDown(0) & WPAD_BUTTON_A) {
 				scene = 2;
-				clrGreen = clrBlue;
-
-				
 			}
 
 		}
@@ -302,15 +319,15 @@ int main(int argc, char **argv) {
 
 		// Begin rendering on top screen
 		vcplib_FrameBegin();
-		C2D_TargetClear(top, clrClear);
-		C2D_SceneBegin(top);
+	//	C2D_TargetClear(top, clrClear);
+	//	C2D_SceneBegin(top);
 
 
 		if (scene == 2){
 			// This C2D_DrawRectangle function remains in existence as a comment so that it can be used as future reference for rectangles and offsetting code.
 			//	C2D_DrawRectangle(testobjX - playerX, testobjY - playerY, 0, 50, 50, clrRed, clrRed, clrRed, clrRed);
-			vcplib_DrawImage(C2D_SpriteSheetGetImage(spriteSheet, 5), vent1x - playerX, vent1y - playerY, 1);
-			vcplib_DrawImage(C2D_SpriteSheetGetImage(spriteSheet, 5), vent2x - playerX, vent2y - playerY, 1);
+			vcplib_DrawImage(ventclosed, vent1x - playerX, vent1y - playerY, 1);
+			vcplib_DrawImage(ventclosed, vent2x - playerX, vent2y - playerY, 1);
 			if (!inVent)
 				vcplib_DrawImage(playersprite, 150, 100, 1);
 			
@@ -320,23 +337,23 @@ int main(int argc, char **argv) {
 
 
 		// Begin rendering on bottom screen
-    	C2D_TargetClear(bottom, clrClear);
-		C2D_SceneBegin(bottom);
+    //	C2D_TargetClear(bottom, clrClear);
+	//	C2D_SceneBegin(bottom);
 
 		if (scene == 2){
 			
 		}
 		if (scene == 1){
-			vcplib_DrawImage(C2D_SpriteSheetGetImage(spriteSheet, 4), 70, 100, 1);
+			vcplib_DrawImage(freeplaybutton, 70, 100, 1);
 			
 		}
 
-		C3D_FrameEnd(0);
+		vcplib_FrameEnd();
 		
 	}
 
 	// Deinit libs
-	C2D_SpriteSheetFree(spriteSheet);
+//	C2D_SpriteSheetFree(spriteSheet);
 	vcplib_Deinit();
 	exit(0);
 }
