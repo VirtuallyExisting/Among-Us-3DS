@@ -1,8 +1,8 @@
 # Among Us Cross (Cross Platform)
 A recreation of Among Us with new features and completely rewritten for the Nintendo 3DS (Wii and DS support coming soon)
 
-## This branch is marked as _not currently functional_. So do not expect builds that do _anything_
-But on that note, this branch will be completed in a mild period of time, so don't worry!
+## This branch is marked as WORKING!
+This branch has officially completed support that functions as intended.
 
 # How to compile Among Us Cross (ALL platforms)
 
