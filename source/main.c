@@ -100,6 +100,9 @@ int main(int argc, char* argv[]) {
 
 	int animCounter = 0;
 
+	float playerscalex;
+	playerscalex = 1;
+
 	C2D_SpriteSheet spriteSheet;
 	C2D_Sprite sprite;
 	C2D_Sprite freeplaybutton;
@@ -235,6 +238,11 @@ int main(int argc, char* argv[]) {
 				playerAnim = 0;
 			if (kDown & (KEY_CPAD_UP | KEY_CPAD_DOWN | KEY_CPAD_LEFT | KEY_CPAD_RIGHT))
 				playerAnim = 1;
+
+			if (kDown & KEY_CPAD_LEFT)
+				playerscalex = -1;
+			if (kDown & KEY_CPAD_RIGHT)
+				playerscalex = 1;
 			
 			if (playerAnim == 0) {
 				playersprite = C2D_SpriteSheetGetImage(spriteSheet, 0);
@@ -299,12 +307,16 @@ int main(int argc, char* argv[]) {
 		if (scene == 2){
 			// This C2D_DrawRectangle function remains in existence as a comment so that it can be used as future reference for rectangles and offsetting code.
 			//	C2D_DrawRectangle(testobjX - playerX, testobjY - playerY, 0, 50, 50, clrRed, clrRed, clrRed, clrRed);
-			vcplib_DrawImage(C2D_SpriteSheetGetImage(spriteSheet, 5), vent1x - playerX, vent1y - playerY, 1);
-			vcplib_DrawImage(C2D_SpriteSheetGetImage(spriteSheet, 5), vent2x - playerX, vent2y - playerY, 1);
+			// Draw map in the back because it needs to render first
+			vcplib_DrawImage(C2D_SpriteSheetGetImage(spriteSheet, 7), 0 - playerX, 0 - playerY, 4, 4);
+			vcplib_DrawImage(C2D_SpriteSheetGetImage(spriteSheet, 8), -505 - playerX, 265 - playerY, 2, 2);
+
+			vcplib_DrawImage(C2D_SpriteSheetGetImage(spriteSheet, 5), vent1x - playerX, vent1y - playerY, 1, 1);
+			vcplib_DrawImage(C2D_SpriteSheetGetImage(spriteSheet, 5), vent2x - playerX, vent2y - playerY, 1, 1);
 			if (!inVent)
-				vcplib_DrawImage(playersprite, 150, 100, 1);
+				vcplib_DrawImage(playersprite, 150, 100, playerscalex, 1);
 			
-			vcplib_DrawImage(dummy1spr, dummy1x - playerX, dummy1y - playerY, 1);
+			vcplib_DrawImage(dummy1spr, dummy1x - playerX, dummy1y - playerY, 1, 1);
 		
 		}
 
@@ -317,7 +329,7 @@ int main(int argc, char* argv[]) {
 			
 		}
 		if (scene == 1){
-			vcplib_DrawImage(C2D_SpriteSheetGetImage(spriteSheet, 4), 70, 100, 1);
+			vcplib_DrawImage(C2D_SpriteSheetGetImage(spriteSheet, 4), 70, 100, 1, 1);
 			
 		}
 
