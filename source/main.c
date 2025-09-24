@@ -16,6 +16,8 @@
 #include <Walk3_bmp.h>
 #include <deadbody_bmp.h>
 #include <ventclosed_bmp.h>
+#include <skeldcafe_bmp.h>
+#include <skeldhall1_bmp.h>
 
 
 #define SCREEN_WIDTH  400
@@ -109,6 +111,9 @@ int main(int argc, char **argv) {
 
 	int animCounter = 0;
 
+	float playerscalex;
+	playerscalex = 1;
+
 //	C2D_SpriteSheet spriteSheet;
 //	C2D_Sprite sprite;
 //	C2D_Sprite freeplaybutton;
@@ -129,6 +134,8 @@ int main(int argc, char **argv) {
 	GRRLIB_texImg *redcrewwalk3 = GRRLIB_LoadTexture(Walk3_bmp);
 	GRRLIB_texImg *redcrewdead = GRRLIB_LoadTexture(deadbody_bmp);
 	GRRLIB_texImg *ventclosed = GRRLIB_LoadTexture(ventclosed_bmp);
+	GRRLIB_texImg *skeldcafe = GRRLIB_LoadTexture(skeldcafe_bmp);
+	GRRLIB_texImg *skeldhallway1 = GRRLIB_LoadTexture(skeldhall1_bmp);
 
 	GRRLIB_texImg *playersprite = redcrewidle;
 	GRRLIB_texImg *dummy1spr = redcrewidle;
@@ -204,10 +211,14 @@ int main(int argc, char **argv) {
 			u32 kDown = WPAD_ButtonsHeld(0);
 			u32 kPressed = WPAD_ButtonsDown(0);
 			if (!inVent) {
-				if (kDown & WPAD_BUTTON_RIGHT)
+				if (kDown & WPAD_BUTTON_RIGHT) {
 					playerX = playerX + 3;
-				if (kDown & WPAD_BUTTON_LEFT)
+					playerscalex = 1;
+				}
+				if (kDown & WPAD_BUTTON_LEFT) {
 					playerX = playerX - 3;
+					playerscalex = -1;
+				}
 				if (kDown & WPAD_BUTTON_DOWN)
 					playerY = playerY + 3;
 				if (kDown & WPAD_BUTTON_UP)
@@ -326,12 +337,15 @@ int main(int argc, char **argv) {
 		if (scene == 2){
 			// This C2D_DrawRectangle function remains in existence as a comment so that it can be used as future reference for rectangles and offsetting code.
 			//	C2D_DrawRectangle(testobjX - playerX, testobjY - playerY, 0, 50, 50, clrRed, clrRed, clrRed, clrRed);
-			vcplib_DrawImage(ventclosed, vent1x - playerX, vent1y - playerY, 1);
-			vcplib_DrawImage(ventclosed, vent2x - playerX, vent2y - playerY, 1);
+			vcplib_DrawImage(skeldcafe, 0 - playerX, 0 - playerY, 4, 4);
+			vcplib_DrawImage(skeldhallway1, -505 - playerX, 265 - playerY, 2, 2);
+
+			vcplib_DrawImage(ventclosed, vent1x - playerX, vent1y - playerY, 1, 1);
+			vcplib_DrawImage(ventclosed, vent2x - playerX, vent2y - playerY, 1, 1);
 			if (!inVent)
-				vcplib_DrawImage(playersprite, 150, 100, 1);
+				vcplib_DrawImage(playersprite, 150, 100, playerscalex, 1);
 			
-			vcplib_DrawImage(dummy1spr, dummy1x - playerX, dummy1y - playerY, 1);
+			vcplib_DrawImage(dummy1spr, dummy1x - playerX, dummy1y - playerY, 1, 1);
 		
 		}
 
@@ -344,7 +358,7 @@ int main(int argc, char **argv) {
 			
 		}
 		if (scene == 1){
-			vcplib_DrawImage(freeplaybutton, 70, 100, 1);
+			vcplib_DrawImage(freeplaybutton, 70, 100, 1, 1);
 			
 		}
 
