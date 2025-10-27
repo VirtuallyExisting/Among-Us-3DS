@@ -4,6 +4,16 @@ A recreation of Among Us with new features and completely rewritten for the Nint
 ## This branch is marked as WORKING!
 This branch has officially completed support that functions as intended.
 
+
+
+# Is this still being developed?
+Yes. As of October 27th I have officially began development again.
+
+
+
+
+
+
 # How to compile Among Us Cross (ALL platforms)
 
 There is a list of things you'll have to do to compile AU3DS/AUCross:
