@@ -1,11 +1,9 @@
 # Among Us Cross (Cross Platform)
 A recreation of Among Us with new features and completely rewritten for the Nintendo 3DS and Wii! (DS support coming soon.)
 
-## This project has become closed source from this point on.
-I have decided to maximize security/fun by not commiting to this repository (code-wise, other updates and releases will still be available) to reduce the possibility of any hacking clients and/or malicious activity.
 
-# IF YOU _NEED_ THE SOURCE CODE
-Make an issue on the repository
+# Notice
+This project is currently on-hold, but will be resumed.
 
 ## This branch is marked as WORKING!
 This branch has officially completed support that functions as intended.
